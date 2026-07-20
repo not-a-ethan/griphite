@@ -25,13 +25,15 @@ body {
     margin-left: 10px;
 }
 
+
+
 #note {
     grid-column: 2;
 
     max-height: 100%;
 
-    border: none;
-    resize: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
 
     margin: 0;
     padding: 0;
@@ -40,7 +42,14 @@ body {
     padding-top: 10px;
 }
 
-#note:focus {
+#edit {
+    border: none;
+    border-right: 1px solid black;
+
+    resize: none;
+}
+
+#edit:focus {
     outline: none;
 }
 
@@ -58,13 +67,18 @@ body {
     border: none;
 
     cursor: pointer;
+
+    border-radius: 5px;
 }
 
 .file:hover, .folderName:hover {
     background-color: lightgray;
-    border-radius: 5px;
 }
 
 .otherFile {
     color: gray;
+}
+
+.selected {
+    background-color: lightgray;
 }

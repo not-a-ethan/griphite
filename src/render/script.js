@@ -1,7 +1,7 @@
 window.electronAPI.send("getFS", {});
 
 const fileTree = document.getElementById("fs");
-const editPane = document.getElementById("note");
+const editPane = document.getElementById("edit");
 
 // Var stores the current file open. Used when saving files
 let currentFilePath = "";
@@ -191,6 +191,12 @@ function handleNewFolderName() {
 // Functions handling notes
 function getNote(e) {
     const path = e.target.id;
+
+    [].forEach.call(document.getElementsByClassName("selected"), function(el) {
+        el.classList.remove("selected");
+    });
+
+    document.getElementById(path).classList.add("selected");
 
     window.electronAPI.send("getNote", { filePath: path });
 
