@@ -2,6 +2,7 @@ window.electronAPI.send("getFS", {});
 
 const fileTree = document.getElementById("fs");
 const editPane = document.getElementById("edit");
+const previewPane = document.getElementById("preview");
 
 // Var stores the current file open. Used when saving files
 let currentFilePath = "";
@@ -19,11 +20,11 @@ window.electronAPI.on("fsResponse", (event, data) => {
 
         const dropDown = document.createElement("details");
         dropDown.id = `${thisFolder.parentPath}/${thisFolder.name}`;
-        dropDown.className = "folder"
+        dropDown.classList.add("folder");
 
         const summary = document.createElement("summary");
         summary.innerText = thisFolder.name;
-        summary.className = "folderName"
+        summary.classList.add("folderName");
 
         dropDown.appendChild(summary);
 
@@ -47,7 +48,7 @@ window.electronAPI.on("fsResponse", (event, data) => {
 
         const btn = document.createElement("button");
         btn.innerText = (thisFile.name).substring(0, thisFile.name.length - 3);
-        btn.className = "file mdFile";
+        btn.classList.add("file", "mdFile");
         btn.id = thisFile.parentPath + "/" + thisFile.name;
         btn.addEventListener("click", getNote);
 
@@ -73,7 +74,7 @@ window.electronAPI.on("fsResponse", (event, data) => {
 
         const btn = document.createElement("button");
         btn.innerText = thisFile.name;
-        btn.className = "file otherFile";
+        btn.classList.add("file", "otherFile");
 
         if (thisFile.parentPath === rootNotes) {
             // Root level notes
@@ -189,6 +190,13 @@ function handleNewFolderName() {
 };
 
 // Functions handling notes
+function updatePreview() {
+    const md = editPane.value;
+    const rendered = marked(md, { breaks: true });
+
+    previewPane.innerHTML = rendered;
+};
+
 function getNote(e) {
     const path = e.target.id;
 
@@ -208,9 +216,13 @@ function getNote(e) {
         };
 
         editPane.value = data;
+        updatePreview();
+
         currentFilePath = path;
     });
 };
+
+editPane.addEventListener("input", updatePreview);
 
 // Save file from window menu
 window.electronAPI.requestSave(() => {
