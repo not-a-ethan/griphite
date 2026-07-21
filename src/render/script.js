@@ -252,16 +252,35 @@ function updateTheme() {
             document.body.setAttribute('data-theme', 'light');
         };
     } else {
-        console.log(appTheme)
         if (appTheme === "dark") {
-            console.log(257)
             document.body.setAttribute('data-theme', 'dark');
         } else if (appTheme === "light") {
-            console.log(260)
             document.body.setAttribute('data-theme', 'light');
         };
     };
+
+    if (appTheme !== "sys") {
+        if (document.body.getAttribute("data-theme") === "dark") {
+            document.getElementById("theme").value = "dark";
+        } else {
+            document.getElementById("theme").value = "light";
+        };
+    } else {
+        document.getElementById("theme").value = "sys";
+    };
 }
+
+function showPreview() {
+    if (localStorage.getItem("showPreview") === "true" || localStorage.getItem("showPreview") === null) {
+        document.getElementById("showPreview").checked = true;
+
+        document.body.setAttribute("data-showpreview", "true");
+    } else {
+        document.getElementById("showPreview").checked = false;
+
+        document.body.setAttribute("data-showpreview", "false");
+    };
+};
 
 Array.from(document.getElementsByClassName("prefrenceSetting")).forEach(elm => {
     elm.addEventListener("input", (e) => {
@@ -276,10 +295,15 @@ Array.from(document.getElementsByClassName("prefrenceSetting")).forEach(elm => {
         if (setting === "theme") {
             updateTheme();
         };
+
+        if (setting === "showPreview") {
+            showPreview();
+        };
     });
 });
 
 updateTheme();
+showPreview();
 
 // Code to delete a note
 //window.electronAPI.send("deleteNote", { filePath: "thingy.md" });

@@ -60,6 +60,10 @@ body {
     padding-left: 10px;
 }
 
+body[data-showpreview="false"] #note {
+    grid-template-columns: 1fr;
+}
+
 #note > * {
     padding-top: 10px;
 }
@@ -74,12 +78,20 @@ body {
     resize: none;
 }
 
+body[data-showpreview="false"] #edit {
+    border-right: none;
+}
+
 #edit:focus {
     outline: none;
 }
 
 #preview {
     margin-left: 5px;
+}
+
+body[data-showpreview="false"] #preview {
+    display: none;
 }
 
 #preview > *:first-child {
@@ -122,6 +134,17 @@ body {
 #prefrences {
     width: 80%;
     height: 85%;
+
+    background-color: var(--background);
+    border-color: var(--background-secondary);
+    color: var(--text);
+
+}
+
+#theme {
+    background-color: var(--background);
+    border-color: var(--background-secondary);
+    color: var(--text);
 }
 
 #actions > * {
