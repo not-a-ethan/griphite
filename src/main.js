@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, Menu } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu, clipboard, protocol } = require('electron');
 const { shell } = require('electron/common');
 const path = require('path');
 const fs = require('node:fs');
@@ -118,6 +118,13 @@ const createWindow = () => {
             win.webContents.send("request-save")
           }
         },
+        {
+          role: "settings",
+          label: "Prefrences",
+          click: () => {
+            win.webContents.send("open-settings")
+          }
+        },
         ...(isMac
           ? [
               { role: 'pasteAndMatchStyle' },
@@ -140,14 +147,13 @@ const createWindow = () => {
       ]
     },
     { role: 'viewMenu' },
-    { role: 'windowMenu' },
   ];
 
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
 
   win.loadFile('src/render/index.html');
-}
+};
 
 const isMac = process.platform === 'darwin'
 

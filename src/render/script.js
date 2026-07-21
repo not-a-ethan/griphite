@@ -3,6 +3,7 @@ window.electronAPI.send("getFS", {});
 const fileTree = document.getElementById("fs");
 const editPane = document.getElementById("edit");
 const previewPane = document.getElementById("preview");
+const prefrencesDialog = document.getElementById("prefrences");
 
 // Var stores the current file open. Used when saving files
 let currentFilePath = "";
@@ -233,14 +234,52 @@ window.electronAPI.requestSave(() => {
     window.electronAPI.send("saveNote", { filePath: currentFilePath, content: editPane.value });
 });
 
-document.getElementById("createFolder").addEventListener("click", createFolderNameInput)
+document.getElementById("createFolder").addEventListener("click", createFolderNameInput);
 
-// Code to make a folder
-//window.electronAPI.send("createFolder", { name: "a great name", parentPath: "notes" });
+// Functions for settings/prefrences
+window.electronAPI.openSettings(() => {
+    prefrencesDialog.showPopover();
+});
 
-// Code to make a note
-//window.electronAPI.send("createNote", { title: "Amazing note", parentPath: "notes" });
+function updateTheme() {
+    const darkModeMql = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+    const appTheme = localStorage.getItem("theme");
+
+    if (appTheme === null || appTheme === "sys") {
+        if (darkModeMql && darkModeMql.matches) {
+            document.body.setAttribute('data-theme', 'dark');
+        } else {
+            document.body.setAttribute('data-theme', 'light');
+        };
+    } else {
+        console.log(appTheme)
+        if (appTheme === "dark") {
+            console.log(257)
+            document.body.setAttribute('data-theme', 'dark');
+        } else if (appTheme === "light") {
+            console.log(260)
+            document.body.setAttribute('data-theme', 'light');
+        };
+    };
+}
+
+Array.from(document.getElementsByClassName("prefrenceSetting")).forEach(elm => {
+    elm.addEventListener("input", (e) => {
+        const setting = e.target.id;
+
+        if (e.target.value === "on") {
+            localStorage.setItem(setting, e.target.checked);
+        } else {
+            localStorage.setItem(setting, e.target.value);
+        };
+
+        if (setting === "theme") {
+            updateTheme();
+        };
+    });
+});
+
+updateTheme();
 
 // Code to delete a note
 //window.electronAPI.send("deleteNote", { filePath: "thingy.md" });
-

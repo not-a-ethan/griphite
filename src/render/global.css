@@ -1,3 +1,21 @@
+:root {
+    --background: white;
+    --background-secondary: lightgray;
+    --background-trinary: gray;
+
+    --text: black;
+    --text-secondary: lightgray;
+}
+
+[data-theme="dark"] {
+    --background: rgb(41, 41, 41);
+    --background-secondary: black;
+    --background-trinary: rgb(35, 35, 35);
+
+    --text: rgb(165, 165, 165);
+    --text-secondary: rgb(104, 104, 104);
+}
+
 body {
     display: grid;
 
@@ -13,12 +31,15 @@ body {
 
     margin: 0;
     padding: 0;
+
+    background-color: var(--background);
+    color: var(--text);
 }
 
 #fs {
     grid-column: 1;
     
-    border-right: black solid 1px;
+    border-right: var(--text) solid 1px;
 
     height: 100%;
     
@@ -45,7 +66,10 @@ body {
 
 #edit {
     border: none;
-    border-right: 1px solid black;
+    border-right: 1px solid var(--text);
+
+    background-color: var(--background);
+    color: var(--text);
 
     resize: none;
 }
@@ -73,7 +97,9 @@ body {
 }
 
 .file {
-    background-color: white;
+    background-color: var(--background);
+    color: var(--text);
+
     border: none;
 
     cursor: pointer;
@@ -82,13 +108,22 @@ body {
 }
 
 .file:hover, .folderName:hover {
-    background-color: lightgray;
+    background-color: var(--background-secondary);
 }
 
 .otherFile {
-    color: gray;
+    color: var(--text-secondary);
 }
 
 .selected {
-    background-color: lightgray;
+    background-color: var(--background-secondary);
+}
+
+#prefrences {
+    width: 80%;
+    height: 85%;
+}
+
+#actions > * {
+    background-color: var(--background-secondary);
 }
