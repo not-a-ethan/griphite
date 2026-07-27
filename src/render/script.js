@@ -8,6 +8,11 @@ const prefrencesDialog = document.getElementById("prefrences");
 // Var stores the current file open. Used when saving files
 let currentFilePath = "";
 
+function startDrag(e) {
+    e.dataTransfer.setData("text", e.target.id);
+    e.dataTransfer.effectAllowed = "move";
+};
+
 // Render file structure
 window.electronAPI.on("fsResponse", (event, data) => {
     const folders = data["folders"];
@@ -22,11 +27,34 @@ window.electronAPI.on("fsResponse", (event, data) => {
         const dropDown = document.createElement("details");
         dropDown.id = `${thisFolder.parentPath}/${thisFolder.name}`;
         dropDown.classList.add("folder");
+        dropDown.addEventListener("dragstart", startDrag);
+        dropDown.addEventListener("dragover", function(e) {
+            e.preventDefault();
+
+            e.dataTransfer.dropEffect = "move";
+        });
+
+        dropDown.addEventListener("drop", function(e) {
+            e.preventDefault();
+
+            const oldPath = e.dataTransfer.getData("text");
+            const newParent = e.target.id;
+
+            console.log(oldPath);
+            console.log(newParent);
+
+            if ((oldPath === newParent) || (!oldPath)) {
+                return;
+            };
+
+            window.electronAPI.send("moveItem", { oldPath: oldPath, newParent: newParent });
+        });
 
         const summary = document.createElement("summary");
+        summary.id = `${thisFolder.parentPath}/${thisFolder.name}`;
         summary.innerText = thisFolder.name;
         summary.classList.add("folderName");
-
+        summary.draggable = true;
         dropDown.appendChild(summary);
 
         if (rootNotes === thisFolder.parentPath) {
@@ -51,6 +79,7 @@ window.electronAPI.on("fsResponse", (event, data) => {
         btn.innerText = (thisFile.name).substring(0, thisFile.name.length - 3);
         btn.classList.add("file", "mdFile");
         btn.id = thisFile.parentPath + "/" + thisFile.name;
+        btn.draggable = true;
         btn.addEventListener("click", getNote);
 
         if (thisFile.parentPath === rootNotes) {

@@ -84,6 +84,22 @@ function writeNote(filePath, content) {
   return true;
 };
 
+function moveItem(oldPath, newParent) {
+  try {
+    const name = oldPath.split("/")[oldPath.split("/").length - 1];
+
+    console.log(path.join(newParent, name));
+
+    fs.renameSync(oldPath, path.join(newParent, name));
+  } catch (e) {
+    console.error(e);
+
+    return false;
+  };
+
+  return true;
+};
+
 const createWindow = () => {
   const win = new BrowserWindow({
     width: 800,
@@ -201,6 +217,10 @@ app.whenReady().then(() => {
     const content = payloadFromRenderer["content"];
 
     writeNote(filePath, content);
+  });
+
+  ipcMain.on("moveItem", (event, payloadFromRenderer) => {
+    moveItem(payloadFromRenderer["oldPath"], payloadFromRenderer["newParent"]);
   });
 
   
