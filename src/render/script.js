@@ -40,12 +40,13 @@ window.electronAPI.on("fsResponse", (event, data) => {
             const oldPath = e.dataTransfer.getData("text");
             const newParent = e.target.id;
 
-            console.log(oldPath);
-            console.log(newParent);
-
             if ((oldPath === newParent) || (!oldPath)) {
                 return;
             };
+
+            console.log(e.target.parentElement);
+
+            e.target.parentNode.appendChild(document.getElementById(oldPath));
 
             window.electronAPI.send("moveItem", { oldPath: oldPath, newParent: newParent });
         });
@@ -81,6 +82,7 @@ window.electronAPI.on("fsResponse", (event, data) => {
         btn.id = thisFile.parentPath + "/" + thisFile.name;
         btn.draggable = true;
         btn.addEventListener("click", getNote);
+        btn.addEventListener("dragstart", startDrag);
 
         if (thisFile.parentPath === rootNotes) {
             // Root level notes
@@ -105,6 +107,7 @@ window.electronAPI.on("fsResponse", (event, data) => {
         const btn = document.createElement("button");
         btn.innerText = thisFile.name;
         btn.classList.add("file", "otherFile");
+        btn.addEventListener("dragstart", startDrag);
 
         if (thisFile.parentPath === rootNotes) {
             // Root level notes
