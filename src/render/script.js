@@ -26,13 +26,20 @@ window.electronAPI.on("fsResponse", (event, data) => {
 
         const dropDown = document.createElement("details");
         dropDown.id = `${thisFolder.parentPath}/${thisFolder.name}`;
-        dropDown.classList.add("folder");
+        dropDown.classList.add("folder", "fsItem");
         dropDown.addEventListener("dragstart", startDrag);
         dropDown.addEventListener("dragover", function(e) {
             e.preventDefault();
 
             e.dataTransfer.dropEffect = "move";
         });
+        /*
+        dropDown.addEventListener("contextmenu", (event) => {
+            event.preventDefault();
+            window.electronAPI.send('context-menu');
+            event.target.classList.add("rightClicked");
+        });
+        */
 
         dropDown.addEventListener("drop", function(e) {
             e.preventDefault();
@@ -54,8 +61,15 @@ window.electronAPI.on("fsResponse", (event, data) => {
         const summary = document.createElement("summary");
         summary.id = `${thisFolder.parentPath}/${thisFolder.name}`;
         summary.innerText = thisFolder.name;
-        summary.classList.add("folderName");
+        summary.classList.add("folderName", "fsItem");
         summary.draggable = true;
+        /*
+        summary.addEventListener("contextmenu", (event) => {
+            event.preventDefault();
+            window.electronAPI.send('context-menu');
+            event.target.classList.add("rightClicked");
+        });
+        */
         dropDown.appendChild(summary);
 
         if (rootNotes === thisFolder.parentPath) {
@@ -78,12 +92,18 @@ window.electronAPI.on("fsResponse", (event, data) => {
 
         const btn = document.createElement("button");
         btn.innerText = (thisFile.name).substring(0, thisFile.name.length - 3);
-        btn.classList.add("file", "mdFile");
+        btn.classList.add("file", "mdFile", "fsItem");
         btn.id = thisFile.parentPath + "/" + thisFile.name;
         btn.draggable = true;
         btn.addEventListener("click", getNote);
         btn.addEventListener("dragstart", startDrag);
-
+        /*
+        btn.addEventListener("contextmenu", (event) => {
+            event.preventDefault();
+            window.electronAPI.send('context-menu');
+            event.target.classList.add("rightClickedrightClicked");
+        });
+        */
         if (thisFile.parentPath === rootNotes) {
             // Root level notes
             fileTree.appendChild(btn);
@@ -106,8 +126,14 @@ window.electronAPI.on("fsResponse", (event, data) => {
 
         const btn = document.createElement("button");
         btn.innerText = thisFile.name;
-        btn.classList.add("file", "otherFile");
+        btn.classList.add("file", "otherFile", "fsItem");
         btn.addEventListener("dragstart", startDrag);
+        /*
+        btn.addEventListener("contextmenu", (event) => {
+            event.preventDefault();
+            window.electronAPI.send('context-menu');
+        });
+        */
 
         if (thisFile.parentPath === rootNotes) {
             // Root level notes
@@ -255,6 +281,22 @@ function getNote(e) {
     });
 };
 
+/*
+// FS managment functions
+function deleteItem() {
+    const item = document.getElementsByClassName("rightClicked")[0];
+    item.classList.remove("rightClicked");
+
+    console.log(item);
+
+    //window.electronAPI.send("deleteNote", { filePath: "thingy.md" });
+};
+
+window.electronAPI.requestDelete(() => {
+    deleteItem();
+});
+*/
+
 editPane.addEventListener("input", updatePreview);
 
 // Save file from window menu
@@ -336,6 +378,3 @@ Array.from(document.getElementsByClassName("prefrenceSetting")).forEach(elm => {
 
 updateTheme();
 showPreview();
-
-// Code to delete a note
-//window.electronAPI.send("deleteNote", { filePath: "thingy.md" });

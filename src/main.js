@@ -105,7 +105,6 @@ const createWindow = () => {
     width: 800,
     height: 600,
     webPreferences: {
-        //preload: path.join(__dirname, "setup.js")
         contextIsolation: true,
         enableRemoteModule: false,
         preload: path.join(__dirname, "preload.js")
@@ -165,8 +164,35 @@ const createWindow = () => {
     { role: 'viewMenu' },
   ];
 
-  const menu = Menu.buildFromTemplate(template);
-  Menu.setApplicationMenu(menu);
+  /*
+  const windowMenu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(windowMenu);
+
+  const rightClickMenu = Menu.buildFromTemplate([
+    { 
+      role: 'rename',
+      label: "Rename",
+      click: () => {
+        console.log(`main 230`)
+        win.webContents.send("request-rename");
+      } 
+    },
+    { 
+      role: 'delete',
+      label: "Delete",
+      click: () => {
+        console.log(`main 238`)
+        win.webContents.send("request-delete");
+      }
+    },
+  ]);
+
+  ipcMain.on('context-menu', (event) => {
+    rightClickMenu.popup({
+      window: BrowserWindow.fromWebContents(event.sender)
+    })
+  })
+    */
 
   win.loadFile('src/render/index.html');
 };
@@ -222,8 +248,6 @@ app.whenReady().then(() => {
   ipcMain.on("moveItem", (event, payloadFromRenderer) => {
     moveItem(payloadFromRenderer["oldPath"], payloadFromRenderer["newParent"]);
   });
-
-  
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
