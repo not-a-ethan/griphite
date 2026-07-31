@@ -164,10 +164,10 @@ const createWindow = () => {
     { role: 'viewMenu' },
   ];
 
-  /*
   const windowMenu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(windowMenu);
 
+  /*
   const rightClickMenu = Menu.buildFromTemplate([
     { 
       role: 'rename',
